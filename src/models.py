@@ -7,26 +7,61 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
+class Users(Base):
+    __tablename__ = 'users'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    user_name = Column(String, nullable=False)
+    password = Column(String, nullable=False)
+    email = Column(Integer, unique=True)
 
-class Address(Base):
-    __tablename__ = 'address'
+
+class Profiles(Base):
+    __tablename__ = 'profiles'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    firstname = Column(String, nullable=False)
+    lastname = Column(String, nullable=False)
+    image_url = Column(String, nullable=False)
+    posts = Column(String) 
+    followers = Column(Integer)
+    following = Column(Integer)
+    users_id = Column(Integer, ForeignKey('users.id'))
+    users = relationship(Users)
+
 
     def to_dict(self):
         return {}
+
+
+class Posts(Base):
+    __tablename__ = 'posts'
+    id = Column(Integer, primary_key=True)
+    users_id = Column(Integer, ForeignKey('users.id'))
+    image_url = Column(String, nullable=False)
+
+
+class Comments(Base):
+    __tablename__ = 'comments'
+    id = Column(Integer, primary_key=True)
+    users_id = Column(Integer, ForeignKey('users.id'))
+    comment = (String(300))
+    posts_id = Column(Integer, ForeignKey('posts.id'))
+
+
+class Likes(Base):
+    __tablename__ = 'likes'
+    id = Column(Integer, primary_key=True)
+    users_id = Column(Integer, ForeignKey('users.id'))
+    posts_id = Column(Integer, ForeignKey('posts.id'))
+
+class Favorites(Base):
+    __tablename__ = 'favorites'
+    id = Column(Integer, primary_key=True)
+    users_id = Column(Integer, ForeignKey('users.id'))
+    posts_id = Column(Integer, ForeignKey('posts.id'))
 
 ## Draw from SQLAlchemy base
 try:
