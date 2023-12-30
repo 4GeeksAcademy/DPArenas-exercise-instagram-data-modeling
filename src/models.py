@@ -15,6 +15,7 @@ class Users(Base):
     user_name = Column(String, nullable=False)
     password = Column(String, nullable=False)
     email = Column(Integer, unique=True)
+    profiles = relationship("Profiles", back_populates="users")
 
 
 class Profiles(Base):
@@ -28,8 +29,8 @@ class Profiles(Base):
     posts = Column(String) 
     followers = Column(Integer)
     following = Column(Integer)
-    users_id = Column(Integer, ForeignKey('users.id'))
-    users = relationship(Users)
+    users_id = Column(Integer, ForeignKey('users.id'), unique=True)
+    users = relationship("Users", back_populates="profiles")
 
 
     def to_dict(self):
@@ -47,7 +48,7 @@ class Comments(Base):
     __tablename__ = 'comments'
     id = Column(Integer, primary_key=True)
     users_id = Column(Integer, ForeignKey('users.id'))
-    comment = (String(300))
+    comment = Column(String(300))
     posts_id = Column(Integer, ForeignKey('posts.id'))
 
 
